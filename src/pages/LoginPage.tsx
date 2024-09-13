@@ -1,41 +1,71 @@
-// src/components/LoginPage.tsx
-
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/Store';
 import { loginUser } from '../reducer/userSlice';
+import { useNavigate } from 'react-router';
+import Swal from 'sweetalert2'; 
+
 const LoginPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const username = useSelector((state: RootState) => state.user.username);
-  const sessionId = useSelector((state: RootState) => state.user.sessionId);
-  const error = useSelector((state: RootState) => state.user.error);
-
+  const { username, sessionId, error } = useSelector((state: RootState) => state.user);
   const [inputUsername, setInputUsername] = useState(username);
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    dispatch(loginUser({ username: inputUsername, password }));
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      const result =  await dispatch(loginUser({ username: inputUsername, password })).unwrap();
+      if(result.sessionId) {
+        Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully logged in.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          navigate("/movie");
+        });
+      }
+    } catch (err) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="card w-96 bg-base-100 shadow-xl">
+  <div className="card-body">
+    <h2 className="card-title">Login</h2>
+    <div className="form-control">
       <input
         type="text"
         value={inputUsername}
         onChange={(e) => setInputUsername(e.target.value)}
         placeholder="Username"
+        disabled={isLoading}
+        className="input input-bordered mb-4"
       />
       <input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
+        disabled={isLoading}
+        className="input input-bordered mb-4"
       />
-      <button onClick={handleLogin}>Login</button>
-      {sessionId && <p>Session ID: {sessionId}</p>}
-      {error && <p>{error}</p>}
+      <button
+        onClick={handleLogin}
+        disabled={isLoading}
+        className="btn btn-primary"
+      >
+        {isLoading ? 'Logging in...' : 'Login'}
+      </button>
     </div>
+    {error && <p className="text-red-500 mt-4">{error}</p>}
+  </div>
+</div>
+
   );
 };
 

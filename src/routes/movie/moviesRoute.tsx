@@ -2,6 +2,7 @@ import { RouteObject } from 'react-router-dom';
 
 import TabMenu from '../../components/TabMenu';
 import DetailPageMovie from '../../pages/DetailPageMovie';
+import ProtectedRoute from './ProtectedRoute';
 export const movieRoute: RouteObject[] = [
 
     {
@@ -9,11 +10,13 @@ export const movieRoute: RouteObject[] = [
         element: <TabMenu/>
     },
     {
-        path: '/movie/:id',
-        element: <DetailPageMovie/>
+        element: <ProtectedRoute />,
+        children: [
+            {
+                path: '/movie/:id',
+                element: <DetailPageMovie/>
+            }
+        ]
     },
-    {
-        path: '/moviedetail',
-        element: <DetailPageMovie/>
-    }
+   
 ]
