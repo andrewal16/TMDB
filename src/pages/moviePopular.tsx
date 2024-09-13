@@ -23,7 +23,8 @@ const MoviePopular: React.FC = () => {
   }
 
   if (status === 'loading') {
-    return <div className="text-center text-xl mt-10">Loading...</div>;
+    return <div className='flex justify-center items-center h-screen'><span className="loading loading-spinner loading-lg "></span></div>
+
   }
 
   return (

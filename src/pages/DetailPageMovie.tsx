@@ -1,61 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from 'axios';
-
-interface MovieDetail {
-  adult: boolean;
-  backdrop_path: string;
-  budget: number;
-  genres: { id: number; name: string }[];
-  homepage: string;
-  id: number;
-  imdb_id: string;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  production_companies: { id: number; name: string; origin_country: string }[];
-  release_date: string;
-  revenue: number;
-  runtime: number;
-  status: string;
-  tagline: string;
-  title: string;
-  vote_average: number;
-  vote_count: number;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/Store";
+import { fetchMovieDetail, fetchMovieReviews } from "../reducer/movieSlicer";
+import MovieReviewCard from "../components/MovieReviewCard";
 
 const DetailPageMovie: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [movie, setMovie] = useState<MovieDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const API_KEY = '032a4051191e2e162e4ba00caba4765e';
-  const BASE_URL = 'https://api.themoviedb.org/3';
+  const dispatch: AppDispatch = useDispatch();
+  const { movie, status, error } = useSelector((state: RootState) => state.movies);
 
   useEffect(() => {
-    const fetchMovieDetail = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/movie/${id}`, {
-          params: {
-            api_key: API_KEY,
-          },
-        });
-        setMovie(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError('Error fetching movie details');
-        setLoading(false);
-      }
-    };
+    if (id) {
+      dispatch(fetchMovieDetail(id));
+      dispatch(fetchMovieReviews(id));
+    }
+  }, [id, dispatch]);
 
-    fetchMovieDetail();
-  }, [id]);
-
-  if (loading) return <span className="flex justify-center display-center items-center   loading loading-dots loading-lg"></span>;
+  if (status === 'loading') return <span className="flex justify-center items-center loading loading-dots loading-lg"></span>;
   if (error) return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
   if (!movie) return <div className="flex justify-center items-center h-screen">No movie data available</div>;
 
@@ -91,6 +54,9 @@ const DetailPageMovie: React.FC = () => {
           <h2 className="text-xl font-semibold mb-2">Tagline:</h2>
           <p className="mb-4 italic">"{movie.tagline}"</p>
         </div>
+      </div>
+      <div>
+        <MovieReviewCard/>
       </div>
     </div>
   );
