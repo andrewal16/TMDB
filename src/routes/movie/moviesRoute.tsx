@@ -3,6 +3,7 @@ import { RouteObject } from 'react-router-dom';
 import TabMenu from '../../components/TabMenu';
 import DetailPageMovie from '../../pages/DetailPageMovie';
 import ProtectedRoute from './ProtectedRoute';
+import MyCollection from '../../pages/MyCollection';
 export const movieRoute: RouteObject[] = [
 
     {
@@ -15,6 +16,10 @@ export const movieRoute: RouteObject[] = [
             {
                 path: '/movie/:id',
                 element: <DetailPageMovie/>
+            },
+            {
+                path: '/mycollection',
+                element: <MyCollection/>
             }
         ]
     },

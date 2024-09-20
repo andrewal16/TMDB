@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/Store";
-import { Movie, fetchNowPlayingMovies } from "../reducer/movieSlicer";
+import { Movie, fetchNowPlayingMovies } from "../reducer/movieSlice";
 import Pagination from "../components/Pagination";
 const MovieList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,15 +12,13 @@ const MovieList: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-
-
   useEffect(() => {
     dispatch(fetchNowPlayingMovies(currentPage));
   }, [dispatch, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  }
+  };
 
   if (status === "failed") {
     return (
@@ -45,11 +43,7 @@ const MovieList: React.FC = () => {
         ))}
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-        
-      />
+      <Pagination currentPage={currentPage} onPageChange={handlePageChange} />
     </div>
   );
 };

@@ -19,7 +19,9 @@ const TabMenu: React.FC = () => {
 
   return (
     <div className="w-full">
+      
       <div className="tabs tabs-boxed justify-center">
+      
         <a
           className={`tab ${activeTab === 'nowPlaying' ? 'tab-active' : ''}`}
           onClick={() => setActiveTab('nowPlaying')}
@@ -38,11 +40,13 @@ const TabMenu: React.FC = () => {
         >
           Upcoming
         </a>
+        
       </div>
 
       <div className="p-4">
         {renderContent()}
       </div>
+      
     </div>
   );
 };

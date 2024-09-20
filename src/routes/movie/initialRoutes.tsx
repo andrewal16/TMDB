@@ -11,7 +11,7 @@ export const initRoute: RouteObject[] = [
     ,
     {
       element: <ProtectedRoute />,
-      children: [...movieRoute],
+      children: [...movieRoute, ],
     }
   ],
   },
